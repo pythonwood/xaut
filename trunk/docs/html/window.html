@@ -14,7 +14,7 @@
 <body>
 <div id="container">
 <div id="header">
-    <h1>X Automation</h1>
+    <h1>XAUT (formerly X Automation)</h1>
 </div>
 <div id="links">
     <ul>
@@ -51,8 +51,16 @@
         <td>Wait until a window exists, and then return a handle to it.</td>
     </tr>
     <tr>
+    	<td><a href="#find_outer_parent">find_outer_parent()</a></td>
+    	<td> Finds the outer parent of a window.</td>
+    </tr>
+    <tr>
         <td><a href="#is_valid">is_valid()</a></td>
         <td>Boolean check to see if a current window handle is valid.</td>
+    </tr>
+    <tr>
+    	<td><a href="#is_active">is_active()</a></td>
+    	<td>Boolean check to see if a current window is the active window.</td>
     </tr>
     <tr>
         <td><a href="#activate">activate()</a></td>
@@ -120,7 +128,7 @@
     </tr>
     <tr>
         <td><a href="#info">info()</a></td>
-        <td>All window info in a tuple (x, y, w, h, name, desktop).</td>
+        <td>All window info in a tuple (x, y, w, h, name, desktop, id).</td>
     </tr>
     <tr>
         <td class="bottom"><a href="#wait_active">wait_active([timeout])</a></td>
@@ -353,6 +361,46 @@ else:
         <a href="index.html">Index Page</a>
     </div>
 </div>
+<div class="command" id="find_outer_parent">
+    <div class="section desc">
+        <h3><a name="find_outer_parent">Function:</a></h3>
+        <p class="function">find_outer_parent()</p>
+        <p class="description">
+        Some programs have the quirk that the Window handle returned from find_window()
+        is not the same as the Window handle returned from active_window().  Eclipse
+        exhibits this behavior - or at least it did when I was writing this.  You can use
+        this function to get the outer window handles of any windows that behave in this
+        fashion if it helps.  This function is used internally by
+        <a href="#wait_active">wait_active</a> for example.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The outer parent of a given window, which may or may not be the same window
+        handle as the original window.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#I'm using Eclipse in this example, since I know it works
+import xaut
+eclipse = xaut.window.find_window(".*Eclipse")
+if(eclipse):
+    eclipse.activate()
+    eclipse.wait_active()
+    active = xaut.window.active_window()
+    print("Active id:  %d" % active.id)
+    print("Eclipse id: %d" % eclipse.id)
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
 <div class="command" id="is_valid">
     <div class="section desc">
         <h3><a name="is_valid">Function:</a></h3>
@@ -407,6 +455,47 @@ if(win):
     while(win.is_valid()):
         kbd.type("exit{Return}")
         time.sleep(.2)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="command" id="is_active">
+    <div class="section desc">
+        <h3><a name="is_active">Function:</a></h3>
+        <p class="function">is_active()</p>
+        <p class="description">
+        Returns a boolean indication of whether or not the window is active.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        True if the window is active, false otherwise.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Make sure two different windows are open for this
+import xaut
+import time
+kbd = xaut.keyboard()
+win = xaut.window.active_window()
+print(win.is_active())
+kbd.type("!{Tab}")
+time.sleep(1)
+print(win.is_active())
+</pre>
     </div>
     <div class="nav">
         <a href="#">Top of document</a>
@@ -1236,7 +1325,7 @@ print("Window %s is on desktop %d" %
         <h3><a name="info">Function:</a></h3>
         <p class="function">info()</p>
         <p class="description">
-        All window info in a tuple (x, y, w, h, name, desktop).
+        All window info in a tuple (x, y, w, h, name, desktop, id).
         This probably has more use as a debugging tool than
         anything else, seeing as how each item is available
         individually.  I typically use this to look at all
@@ -1249,7 +1338,7 @@ print("Window %s is on desktop %d" %
     </div>
     <div class="section return">
         <h3>Return Value:</h3>
-        A tuple of window information in the order, x, y, w, h, name, desktop.
+        A tuple of window information in the order, x, y, w, h, name, desktop, window id.
     </div>
     <div class="section example">
         <h3>Example(s):</h3>
@@ -1323,6 +1412,11 @@ else:
 
 </div><!-- /content -->
 <div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a>
 </div>
 </div><!-- /container -->
 </body>
