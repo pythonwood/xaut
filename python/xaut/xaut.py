@@ -155,6 +155,7 @@ class display:
 # extern unsigned short activate_window(unsigned long);
 # extern unsigned long active_window();
 # extern unsigned long find_window(char*);
+# extern unsigned long find_outer_parent(unsigned long);
 # extern unsigned long search_for_window(char*);
 # extern unsigned short maximize_window(unsigned long, ...);
 # extern unsigned short maximize_window_horz(unsigned long, ...);
@@ -216,8 +217,13 @@ class window:
 
     def is_valid(self):
         return _xautpy.is_valid(self.id)
+    def is_active(self):
+        active_id = _xautpy.active_window()
+        return _xautpy.find_outer_parent(active_id) == _xautpy.find_outer_parent(self.id)
     def activate(self):
         return _xautpy.activate_window(self.id)
+    def find_outer_parent(self):
+        return _xautpy.find_outer_parent()
     def maximize(self, tf = 1):
         return _xautpy.maximize_window(self.id, tf)
     def maximize_horz(self, tf = 1):
@@ -252,13 +258,14 @@ class window:
     def desktop(self):
         return _xautpy.window_desktop(self.id)
     def info(self):
-        inf = [0, 0, 0, 0, "", 0] #Note to self: window info pattern...
+        inf = [0, 0, 0, 0, "", 0, 0] #Note to self: window info pattern...
         inf[0] = self.x()
         inf[1] = self.y()
         inf[2] = self.w()
         inf[3] = self.h()
         inf[4] = self.name()
         inf[5] = self.desktop()
+        inf[6] = self.id()
         return tuple(inf)
     def wait_active(self, timeout = 0):
         import time

@@ -93,7 +93,6 @@ $(distdir):
 	cp $(srcdir)/xaut_window.c $(distdir)/src
 	cp $(srcdir)/xaut_window.h $(distdir)/src
 	mkdir -p $(distdir)/python/$(package)
-	cp $(basedir)/python/egg-info $(distdir)/python/$(package)-$(version).egg-info
 	cp $(basedir)/python/setup.py $(distdir)/python/
 	cp $(basedir)/python/xaut/xaut.py $(distdir)/python/$(package)
 	mkdir -p $(distdir)/docs/html
@@ -104,6 +103,18 @@ $(distdir):
 	cp $(basedir)/docs/html/other.html $(distdir)/docs/html
 	cp $(basedir)/docs/html/window.html $(distdir)/docs/html
 	cp $(basedir)/docs/html/xaut.css $(distdir)/docs/html
+	echo Metadata-Version: 1.0 > $(distdir)/python/$(package)-$(version).egg-info
+	echo Name: xaut>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Version: $(version)>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Summary: Python X window automation>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Home-page: http://xautomation.sourceforge.net>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Author: Chris Parker>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Author-email: chrsprkr3@gmail.com>> $(distdir)/python/$(package)-$(version).egg-info
+	echo License: Python 2.5 or greater \(where compatible with OSI\)>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Description: Python library to manipulate X11 windows>> $(distdir)/python/$(package)-$(version).egg-info
+	echo Platform: posix + X11 like window manager>> $(distdir)/python/$(package)-$(version).egg-info
+	echo >> $(distdir)/python/$(package)-$(version).egg-info
+
 
 FORCE:
 	-rm $(distdir).tar.gz
