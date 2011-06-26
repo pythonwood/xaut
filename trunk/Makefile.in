@@ -38,7 +38,7 @@ link: build
 	$(MAKE) -C src $@ $+
 
 copy: build link clean_lib
-	mv $(srcdir)/_$(package)py* python/$(package)/
+	mv $(srcdir)/_$(package)py* python/
 	@echo "from distutils.core import setup" > python/setup.py
 	@echo "from distutils.command.install import INSTALL_SCHEMES" >> python/setup.py
 	@echo "" >> python/setup.py
@@ -61,9 +61,9 @@ copy: build link clean_lib
 	@echo
 	@echo "********************************************************************************"
 	@echo xaut is ready for use.  Copy ./python/xaut.py and ./python/_xautpy.so
-	@echo to the same directory as your script.  There is also a setup file 'setup.py' that
-	@echo you can use to install xaut into your Python install if you wish - even though
-	@echo I recommend against that.
+	@echo to the same directory as your script.  There is also a setup file \'setup.py\'
+	@echo that you can use to install xaut into your Python install if you wish - even
+	@echo though I recommend against that.
 	@echo "********************************************************************************"
 	@echo
 
