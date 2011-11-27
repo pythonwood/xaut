@@ -358,7 +358,7 @@ void _handle_selection_request(XEvent e, unsigned char* clip, Time ts) {
 
     XEvent resp;
     resp.xselection.type = SelectionNotify;
-    resp.xselection.display = req.display;
+    resp.xselection.display = e.xselection.display;
     resp.xselection.requestor = req.requestor;
     resp.xselection.selection = req.selection;
     resp.xselection.time = req.time;
@@ -381,7 +381,6 @@ void _handle_selection_request(XEvent e, unsigned char* clip, Time ts) {
 
         //If we're here, it's not our request
         resp.xselection.property = None; //This means "no"
-        fprintf(stderr, "Not our request.\n");
     } else if (req.target == timestamp_atom) {
         //The client simply wants to know when we took control.
         resp.xselection.property = req.property;
@@ -389,32 +388,31 @@ void _handle_selection_request(XEvent e, unsigned char* clip, Time ts) {
                 resp.xselection.display,    //Display value is sent to
                 resp.xselection.requestor,  //Who gets the value
                 resp.xselection.property,   //What kind of value are we sending
-                XA_INTEGER,                 //Convert to Integer type
-                32,                         //Use 32 bit value type
+                req.target,                 //We're giving them what they want
+                8,                          //Use 8 bit value type
                 PropModeReplace,            //Replace value in property
                 (unsigned char *)&ts,       //Value to put into response
                 1                           //There's only one value
         );
-        //fprintf(stderr, "Client wants timestamp\n");
     } else if(req.target == targets_atom) {
         //Client wants to know what kind of data we can supply.
+        resp.xselection.property  = req.property;
         XChangeProperty(
                 resp.xselection.display,    //Display value is sent to
                 resp.xselection.requestor,  //Who gets the value
                 resp.xselection.property,   //What kind of value are we sending
-                XA_INTEGER,                 //Convert to Integer type
-                32,                         //Use 32 bit value type
+                XA_ATOM,                    //Predefined atom from X11
+                32,                         //Use 32 bit data type
                 PropModeReplace,            //Replace value in property
                 (unsigned char *)&types[0], //Pointer to first type
-                3                           //There are three values
+                4                           //There are four values
         );
-        //fprintf(stderr, "Client wants types.\n");
     } else if(
             req.target == types[0] ||
             req.target == types[1] ||
             req.target == types[2] ||
             req.target == types[3]) {
-        //We support this target type
+        //Supported target type
         resp.xselection.property = req.property;
         XChangeProperty(
                 resp.xselection.display,    //Display value is sent to
@@ -426,24 +424,21 @@ void _handle_selection_request(XEvent e, unsigned char* clip, Time ts) {
                 clip,                       //Value to put into response
                 strlen((char *)clip)        //The length to send
         );
-        //fprintf(stderr, "Client wants our data: '%s'.\n", clip);
     } else {
         //Unsupported target type
+        resp.xselection.property  = None;
         XChangeProperty(
                 resp.xselection.display,    //Display value is sent to
                 resp.xselection.requestor,  //Who gets the value
                 resp.xselection.property,   //What kind of value are we sending
-                XA_INTEGER,                 //Convert to Integer type
-                32,                         //Use 32 bit value type
+                req.target,                 //We're giving them what they want
+                8,                          //Use 8 bit value type
                 PropModeReplace,            //Replace value in property
-                (unsigned char *)&ts,       //Value to put into response
+                (unsigned char *)None,      //Value to put into response
                 1                           //There's only one value
         );
-        //fprintf(stderr, "Client asked for wrong type.\n");
     }
-
-    XSendEvent(req.display, req.requestor, True, (long)0, &resp);
-    XSync(defaults->display, FALSE);
+    XSendEvent(req.display, req.requestor, True, 0, &resp);
 }
 
 void _set_selection(Atom clipboard, unsigned char* clip) {
@@ -470,15 +465,12 @@ void _set_selection(Atom clipboard, unsigned char* clip) {
         if(event.type == SelectionClear &&
                 event.xselectionclear.selection == clipboard) {
             // Someone else wants to take over this clipboard
-            //fprintf(stderr, "Someone else wants the clipboard\n");
+            XSync(defaults->display, FALSE);
             exit(0);
         } else if(event.type == SelectionRequest &&
                 event.xselectionrequest.selection == clipboard) {
             // Someone wants our data
-            //fprintf(stderr, "Someone wants our data\n");
             _handle_selection_request(event, clip, ts);
-        } else {
-            //fprintf(stderr, "Not my job\n");
         }
     }
 
