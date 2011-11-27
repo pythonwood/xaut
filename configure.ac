@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.60])
-AC_INIT([xaut], [0.3.0], [chrsprkr3@gmail.com])
+AC_INIT([xaut], [0.4.0], [chrsprkr3@gmail.com])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
@@ -15,8 +15,14 @@ AC_CHECK_LIB([X11], [XOpenDisplay], [], [AC_MSG_ERROR([X11 development libraries
 AC_CHECK_LIB([Xtst], [XTestFakeButtonEvent], [], [AC_MSG_ERROR([X11 test libraries not found.  Exiting.])])
 
 #Selects the current python version - the pattern should be obvious
+# I honestly don't know if Python will ever go up to version 2.9, but
+# a kind person named Max Shalenyi asked me to add 2.7 (my version
+# is 2.6), and I figured I'd add enough fun for everyone. :)
 AC_CHECK_LIB([python2.5], [Py_Main], [LOCAL_PYTHON_VERSION="2.5"])
 AC_CHECK_LIB([python2.6], [Py_Main], [LOCAL_PYTHON_VERSION="2.6"])
+AC_CHECK_LIB([python2.7], [Py_Main], [LOCAL_PYTHON_VERSION="2.7"])
+AC_CHECK_LIB([python2.8], [Py_Main], [LOCAL_PYTHON_VERSION="2.8"])
+AC_CHECK_LIB([python2.9], [Py_Main], [LOCAL_PYTHON_VERSION="2.9"])
 
 if test "x$LOCAL_PYTHON_VERSION" = "x"; then
     echo Python library not found.  Exiting.
