@@ -34,6 +34,7 @@ $Rev$
 #include <X11/Xatom.h>
 #include <limits.h>
 
+#include "xaut_clipboard.h"
 #include "xaut_types.h"
 #include "xaut_display.h"
 #include "xaut_keyboard.h"

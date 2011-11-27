@@ -315,10 +315,15 @@ void TEST_activate_window() {
     printf(testing, routine);
     //First with a valid window
     Window win = active_window();
-    assert(activate_window(win));
+    BOOL tf = activate_window(win);
+    if(! tf) {
+        fprintf(stderr, "WARNING: Window may not have activated properly.\n"
+                "This may not be a valid test.\n");
+    }
 
     //Then with an invalid window
     assert(activate_window(20) == FALSE);
+    printf(done, routine);
 }
 void TEST_active_window() {
     char *routine = "TEST_active_window";
@@ -329,7 +334,8 @@ void TEST_active_window() {
 void TEST_find_window() {
     char *routine = "TEST_find_window";
     printf(testing, routine);
-    //Note that this fails when run in Eclipse...
+    //Note that this fails when run in Eclipse.
+    //Apparently it also fails in "terminal"
     Window active = active_window();
     char *name = window_name(active);
     if(name == NULL) {
@@ -346,6 +352,10 @@ void TEST_search_for_window() {
     printf(testing, routine);
     Window active = active_window();
     char *name = window_name(active);
+    if(name == NULL) {
+        printf("Aborting %s - conditions are invalid\n", routine);
+        return;
+    }
     Window* found = search_for_window(name);
     //Note that this fails when run in Eclipse...
     assert(found);
@@ -464,6 +474,11 @@ void TEST_move_window() {
     printf(testing, routine);
     //First with a valid window
     Window win = active_window();
+    char *name = window_name(win);
+    if(name == NULL) {
+        printf("Aborting %s - conditions are invalid\n", routine);
+        return;
+    }
     int before_x = window_x(win);
     int before_y = window_y(win);
     assert(move_window(win, before_x + 10, before_y + 10, -1));
@@ -536,6 +551,10 @@ void TEST_window_name() {
     //First a valid window
     Window win = active_window();
     char *name = window_name(win);
+    if(name == NULL) {
+        printf("Aborting %s - conditions are invalid\n", routine);
+        return;
+    }
     //This fails when run from Eclipse
     assert(name);
     free(name);
@@ -551,6 +570,11 @@ void TEST_window_desktop() {
     printf(testing, routine);
     //First a valid window
     Window win = active_window();
+    char *name = window_name(win);
+    if(name == NULL) {
+        printf("Aborting %s - conditions are invalid\n", routine);
+        return;
+    }
     long desk = window_desktop(win);
     assert(desk > -1);
 
@@ -559,6 +583,28 @@ void TEST_window_desktop() {
     assert(bad == LONG_MIN);
     printf(done, routine);
 }
+void TEST_get_primary() {
+    char *routine = "TEST_get_primary";
+    printf(testing, routine);
+    char* clip = get_primary();
+    assert(strcmp(routine, (char*)clip) == 0);
+    printf(done, routine);
+}
+void TEST_get_secondary() {
+    char *routine = "TEST_get_secondary";
+    printf(testing, routine);
+    char* clip = get_secondary();
+    assert(strcmp(routine, (char*)clip) == 0);
+    printf(done, routine);
+}
+void TEST_get_clipboard() {
+    char *routine = "TEST_get_clipboard";
+    printf(testing, routine);
+    char* clip = get_clipboard();
+    assert(strcmp(routine, (char*)clip) == 0);
+    printf(done, routine);
+}
+
 
 int main(int argc, char* argv[]) {
     Window win = active_window();
@@ -567,6 +613,8 @@ int main(int argc, char* argv[]) {
     printf(" on it's own desktop.\n");
     printf("Also, make sure the mouse starts in the middle");
     printf(" of the title bar.\n");
+    sleep(1);
+
     sleep(3);
     TEST_cleanup();
     TEST_is_valid();
@@ -638,7 +686,17 @@ int main(int argc, char* argv[]) {
     TEST_window_h();
     TEST_window_name();
     TEST_window_desktop();
-    cleanup();
+    sleep(1);
+    put_primary("TEST_get_primary");
+    sleep(1);
+    TEST_get_primary();
+    put_secondary("TEST_get_secondary");
+    sleep(1);
+    TEST_get_secondary();
+    put_clipboard("TEST_get_clipboard");
+    sleep(1);
+    TEST_get_clipboard();
 
+    cleanup();
 	return 0;
 }

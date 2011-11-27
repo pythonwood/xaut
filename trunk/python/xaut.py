@@ -51,6 +51,32 @@ except AttributeError:
 del types
 
 #Keyboard functions - Uses the following native calls:
+#extern char* get_primary();
+#extern char* get_secondary();
+#extern char* get_clipboard();
+#extern void put_primary(char*);
+#extern void put_secondary(char*);
+#extern void put_clipboard(char*);
+#extern void clear_primary();
+#extern void clear_secondary();
+#extern void clear_clipboard();
+class clipboard:
+    def put_primary(self, str):
+        _xautpy.put_primary(str)
+    def put_secondary(self, str):
+        _xautpy.put_secondary(str)
+    def put_clipboard(self, str):
+        _xautpy.put_clipboard(str)
+    def get_primary(self):
+        return _xautpy.get_primary()
+    def get_secondary(self):
+        return _xautpy.get_secondary()
+    def get_clipboard(self):
+        return _xautpy.get_clipboard()
+    def __init__(self):
+        pass
+
+#Keyboard functions - Uses the following native calls:
 # extern void key_down_delay(unsigned short);
 # extern void key_click_delay(unsigned short);
 # extern unsigned short key_click(unsigned int);

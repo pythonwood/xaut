@@ -3,6 +3,7 @@ $Author$
 $Date$
 $Rev$
 
+
 === Preamble ===
 This software is intended to help users of XWindows automate basic windowing
 tasks.  For example you can open, move, and close windows based on title,
@@ -32,10 +33,15 @@ Ubuntu (and similar):
 Programs:
  -- swig
 
-Libraries:
+Libraries for Ubuntu (and similar):
  -- x11proto-xext-dev
  -- libx11-dev
  -- libxtst-dev
+
+Libraries for Fedora:
+ -- xorg-x11-proto-devel
+ -- libX11-devel
+ -- libXtst-devel
 
 Specifically if you are using Ubuntu and wish to compile this software, you can
 use the following command:
@@ -44,10 +50,18 @@ $ sudo aptitude install build-essential swig x11proto-xext-dev libx11-dev \
   libxtst-dev
 
 
+
+Or for Fedora use can use the following commands:
+
+$ sudo yum groupinstall \"Development Tools\"
+$ sudo yum install xorg-x11-proto-devel libX11-devel libXtst-devel
+
+
 === If you want to modify the build ===
  -- autoconf
  -- automake
  -- libtool
+
 
 === What you'll need to run this ===
 This software was originally written against Python 2.6.  It's likely that
@@ -56,9 +70,14 @@ Python 3.x.  However, I do not have Python 3.x installed, and cannot test it.
 
 To run this software - like say for example you compile it on one machine, and
 then transport the binary to another machine - make sure you have the following
-libraries installed:
+libraries installed (Ubuntu or similar):
  -- libx11-dev
  -- libxtst-dev
+
+(Fedora or similar)
+ -- libX11-devel
+ -- libXtst-devel
+
 
 === Installing this software ===
 I highly recommend that you do not install this software.  It is simply beyond
@@ -70,3 +89,40 @@ target, which is installed for completeness sake, but I suggest you ignore it.
 All you need to do to use this software is make sure that xaut.py and
 _xautpy.so are in the same directory as your script.
 
+
+=== Thanks ===
+Many thanks to a person named Max Shalenyi.  Max sent me patch that showed me
+the following cool things:
+ 1) Which libraries are needed for 64 bit.  I'm still using 32 bit Debian.
+ 2) The commands necessary compile this library in Fedora.
+ 3) Max reminded me of the -fPIC flag - which I should included.  <:O)
+ 4) My Python version stopped at 2.6 - which is what I have.  I added up to 2.9
+
+Thank you Max!!
+
+
+Want to see your name in bright lights (well, not that bright, but still)?
+The following are welcome:
+ -- Patches
+ -- Bug Reports
+ -- How to compile or install on your favorite distro
+ -- Any other useful suggestions
+
+Note also that I don't get much traffic related to this library, so I don't
+watch the forums or my email that closely simply because it's unnecessary.
+Rest assured that if you email me, or if you post to the forum (nobody has as
+of the day that I'm writing this), you WILL get a response.  It may take a few
+days - but I WILL respond.  Even though this code doesn't move very fast, I
+actively maintain it.  I use it daily.
+
+Also, I've had the experience where someone emails me with questions or similar
+and my response bounces.  If you are going to email a question to me from the
+SourceForge site, please make sure your email address is in the body of the
+email so I can copy and paste it into a response if "reply-to" fails.  I'm
+not sure whether it gets munged on the SourceForge side or the GMail side, but
+the reply address fails frequently.
+
+Chris Parker
+email:      chrsprkr3@gmail.com
+Main Site:  http://xautomation.sourceforge.net
+Help Forum: https://sourceforge.net/projects/xautomation/forums/forum/924563

@@ -39,6 +39,7 @@ link: build
 
 copy: build link clean_lib
 	mv $(srcdir)/_$(package)py* python/
+	touch python/setup.py
 	@echo "from distutils.core import setup" > python/setup.py
 	@echo "from distutils.command.install import INSTALL_SCHEMES" >> python/setup.py
 	@echo "" >> python/setup.py
@@ -94,14 +95,16 @@ $(distdir):
 	cp Makefile.in $(distdir)
 	cp README $(distdir)
 	cp config.h.in $(distdir)
-	cp install.sh $(distdir)
+	cp install-sh $(distdir)
 	cp $(srcdir)/config.h $(distdir)/src
 	cp $(srcdir)/main.c $(distdir)/src
 	cp $(srcdir)/Makefile.in $(distdir)/src
 	cp $(srcdir)/xaut.c $(distdir)/src
+	cp $(srcdir)/xaut.h $(distdir)/src
+	cp $(srcdir)/xaut_clipboard.c $(distdir)/src
+	cp $(srcdir)/xaut_clipboard.h $(distdir)/src
 	cp $(srcdir)/xaut_display.c $(distdir)/src
 	cp $(srcdir)/xaut_display.h $(distdir)/src
-	cp $(srcdir)/xaut.h $(distdir)/src
 	cp $(srcdir)/xaut_keyboard.c $(distdir)/src
 	cp $(srcdir)/xaut_keyboard.h $(distdir)/src
 	cp $(srcdir)/xaut_mouse.c $(distdir)/src
@@ -110,9 +113,9 @@ $(distdir):
 	cp $(srcdir)/xaut_types.h $(distdir)/src
 	cp $(srcdir)/xaut_window.c $(distdir)/src
 	cp $(srcdir)/xaut_window.h $(distdir)/src
-	mkdir -p $(distdir)/python/$(package)
+	mkdir -p $(distdir)/python/
 	cp $(basedir)/python/setup.py $(distdir)/python/
-	cp $(basedir)/python/xaut/xaut.py $(distdir)/python/$(package)
+	cp $(basedir)/python/xaut.py $(distdir)/python/
 	mkdir -p $(distdir)/docs/html
 	cp $(basedir)/docs/html/display.html $(distdir)/docs/html
 	cp $(basedir)/docs/html/index.html $(distdir)/docs/html

@@ -40,6 +40,14 @@ extern void verbose(unsigned short);
 extern void extra_verbose(unsigned short);
 extern unsigned short init_defaults();
 
+/** Found in xaut_clipboard.h **/
+extern char* get_primary();
+extern char* get_secondary();
+extern char* get_clipboard();
+extern void put_primary(char*);
+extern void put_secondary(char*);
+extern void put_clipboard(char*);
+
 /** Found in xaut_display.h **/
 extern int display_h();
 extern int display_w();
@@ -97,6 +105,14 @@ extern void cleanup();
 extern void verbose(unsigned short);
 extern void extra_verbose(unsigned short);
 extern unsigned short init_defaults();
+
+/** Found in xaut_clipboard.h **/
+extern char* get_primary();
+extern char* get_secondary();
+extern char* get_clipboard();
+extern void put_primary(char*);
+extern void put_secondary(char*);
+extern void put_clipboard(char*);
 
 /** Found in xaut_display.h **/
 extern int display_h();

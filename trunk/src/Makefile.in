@@ -10,14 +10,20 @@ VPATH   = @srcdir@
 package = @PACKAGE_NAME@
 version = @PACKAGE_VERSION@
 
-
 CC = @CC@
-CFLAGS = -Wall
+CFLAGS = -Wall -fPIC
 LIBFLAGS = -c
 DBGFLAGS = -g
 
 LOCAL_PYTHON_VERSION = @LOCAL_PYTHON_VERSION@
 
+# Not sure how portable this is - see http://www.linuxquestions.org/questions/programming-9/how-can-make-makefile-detect-64-bit-os-679513/
+LBITS := $(shell getconf LONG_BIT)
+ifeq ($(LBITS),64)
+	LIBDIR = /usr/lib64
+else
+	LIBDIR = /usr/lib
+endif
 
 #User should not be here, but I don't want this to fail
 user_error:
@@ -25,7 +31,9 @@ user_error:
 	@echo
 	@$(MAKE) -C ..
 
-cleanup:
+cleanup: clean_lib
+
+clean_lib:
 	@-rm -f *.o
 
 #Compile the source code - DO NOT COMPILE "main.c" - that is a separate test executable
@@ -35,6 +43,7 @@ build:
 	$(CC) $(CFLAGS) $(LIBFLAGS) \
 	$(srcdir)/xaut.c $(srcdir)/xaut_display.c $(srcdir)/xaut_keyboard.c \
 	$(srcdir)/xaut_mouse.c $(srcdir)/xaut_window.c $(srcdir)/xautpy_wrap.c \
+	$(srcdir)/xaut_clipboard.c \
 	-I/usr/include/python$(LOCAL_PYTHON_VERSION)/ -I/usr/include/X11/ \
 	-DHAVE_CONFIG_H -DEN_US -DLESS_THAN_FIX
 
@@ -42,6 +51,7 @@ build_test:
 	$(CC) $(CFLAGS) $(DBGFLAGS) \
 	$(srcdir)/xaut.c $(srcdir)/xaut_display.c $(srcdir)/xaut_keyboard.c \
 	$(srcdir)/xaut_mouse.c $(srcdir)/xaut_window.c $(srcdir)/main.c \
+	$(srcdir)/xaut_clipboard.c \
 	-I/usr/include/python$(LOCAL_PYTHON_VERSION)/ -I/usr/include/X11/ \
 	-lX11 -lXtst \
 	-DHAVE_CONFIG_H -DEN_US -DLESS_THAN_FIX \
@@ -52,5 +62,6 @@ build_test:
 link:
 	ld -shared $(srcdir)/xaut.o $(srcdir)/xaut_display.o \
 	$(srcdir)/xaut_keyboard.o $(srcdir)/xaut_mouse.o $(srcdir)/xaut_window.o \
-	$(srcdir)/xautpy_wrap.o \
-	/usr/lib/libX11.so /usr/lib/libXtst.so -o _$(package)py.so
+	$(srcdir)/xautpy_wrap.o $(srcdir)/xaut_clipboard.o \
+	$(LIBDIR)/libX11.so $(LIBDIR)/libXtst.so -o \
+	_$(package)py.so
