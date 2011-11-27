@@ -50,7 +50,7 @@ except AttributeError:
     _newclass = 0
 del types
 
-#Keyboard functions - Uses the following native calls:
+#Clipboard functions - Uses the following native calls:
 #extern char* get_primary();
 #extern char* get_secondary();
 #extern char* get_clipboard();
