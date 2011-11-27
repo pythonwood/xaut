@@ -122,5 +122,4 @@ void put_secondary(char* clip);
  */
 void put_clipboard(char* clip);
 
-
 #endif /* XAUT_CLIPBOARD_H_ */
