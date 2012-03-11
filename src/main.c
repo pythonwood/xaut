@@ -247,6 +247,12 @@ void TEST_move_mouse() {
     //First we test with no window
     int before_x = mouse_x(0);
     int before_y = mouse_y(0);
+
+    //Let's exercise a bug recently found by Beat Master Bob.  The
+    //bug is manifested when the mouse is moved by exactly one
+    //pixel in both the x and y directions simultaneously.
+    assert(move_mouse(before_x + 1, before_y + 1, 0));
+
     assert(move_mouse(0, 0, 0));
     int after_x = mouse_x(0);
     int after_y = mouse_y(0);

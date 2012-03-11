@@ -149,7 +149,8 @@ BOOL move_mouse(int newX, int newY, Window win) {
             int movementX, movementY;
             _gradientMovement(newX, newY, &movementX, &movementY);
             // 1:1 is a little slow
-            if (fabs(movementX) == 1 && fabs(movementY) == 1) {
+            if ((fabs(movementX) == 1 && fabs(movementY) == 1) &&
+                (fabs(newX - oldX) > 1 && fabs(newY - oldY) > 1) ) {
                 movementX *= 2;
                 movementY *= 2;
             }
