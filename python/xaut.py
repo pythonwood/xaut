@@ -291,7 +291,7 @@ class window:
         inf[3] = self.h()
         inf[4] = self.name()
         inf[5] = self.desktop()
-        inf[6] = self.id()
+        inf[6] = self.id
         return tuple(inf)
     def wait_active(self, timeout = 0):
         import time
