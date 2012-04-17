@@ -95,10 +95,17 @@ Many thanks to a person named Max Shalenyi.  Max sent me patch that showed me
 the following cool things:
  1) Which libraries are needed for 64 bit.  I'm still using 32 bit Debian.
  2) The commands necessary compile this library in Fedora.
- 3) Max reminded me of the -fPIC flag - which I should included.  <:O)
+ 3) Max reminded me of the -fPIC flag - which I should have included.  <:O)
  4) My Python version stopped at 2.6 - which is what I have.  I added up to 2.9
 
 Thank you Max!!
+
+Thanks also to Beat Master Bob who found a bug in the mouse.move() code which
+manifests when the mouse is moved precisely 1 pixel in both the x and y
+directions simultaneously.  E.g. mouse.move(mouse.x() + 1, mouse.y() + 1).
+
+Thank you Beat Master Bob!!
+
 
 
 Want to see your name in bright lights (well, not that bright, but still)?
