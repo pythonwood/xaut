@@ -22,6 +22,7 @@ $Rev$
 #include <string.h>
 #include <stdlib.h>
 #include <X11/Xlib.h>
+#include <X11/XKBlib.h>
 #include <assert.h>
 
 #include "xaut.h"
@@ -30,6 +31,16 @@ char *testing = "Testing %s\n";
 char *done = "Finished testing %s\n";
 //The following are tests - plus they enable me to
 // test the program with valgrind
+
+/*
+ * These masks are used to interpret current keyboard state
+ * Note that these are duplicated between this and xaut_keyboard
+ * because I want to not trust the values there.  So I basically
+ * duplicate code here to make sure that the code there works.
+ */
+static unsigned long CAPS_LOCK_MASK = 1;
+static unsigned long NUM_LOCK_MASK = 2;
+static unsigned long SCROLL_LOCK_MASK = 0xFFFFE7FC;
 
 void TEST_cleanup() {
     char *routine = "TEST_cleanup";
@@ -610,6 +621,127 @@ void TEST_get_clipboard() {
     assert(strcmp(routine, (char*)clip) == 0);
     printf(done, routine);
 }
+unsigned long current_lock_mask_for_TESTS() {
+    XKeyboardState state;
+    if(! XGetKeyboardControl(defaults->display, &state)) {
+        return 0;
+    }
+    return state.led_mask;
+}
+void TEST_caps_lock() {
+    char *routine = "TEST_caps_lock";
+    printf(testing, routine);
+    caps_lock_off();
+    assert(! is_caps_lock());
+    assert(! (current_lock_mask_for_TESTS() & CAPS_LOCK_MASK));
+    caps_lock_on();
+    assert(is_caps_lock());
+    assert(current_lock_mask_for_TESTS() & CAPS_LOCK_MASK);
+    caps_lock_off();
+    printf(done, routine);
+}
+void TEST_num_lock() {
+    char *routine = "TEST_num_lock";
+    printf(testing, routine);
+    num_lock_off();
+    assert(! is_num_lock());
+    assert(! (current_lock_mask_for_TESTS() & NUM_LOCK_MASK));
+    num_lock_on();
+    assert(is_num_lock());
+    assert(current_lock_mask_for_TESTS() & NUM_LOCK_MASK);
+    num_lock_off();
+    printf(done, routine);
+}
+void TEST_scroll_lock() {
+    char *routine = "TEST_scroll_lock";
+    printf(testing, routine);
+    scroll_lock_off();
+    assert(! is_scroll_lock());
+    assert(! (current_lock_mask_for_TESTS() & SCROLL_LOCK_MASK));
+    scroll_lock_on();
+    assert(is_scroll_lock());
+    assert(current_lock_mask_for_TESTS() & SCROLL_LOCK_MASK);
+    scroll_lock_off();
+    printf(done, routine);
+}
+void TEST_combo_locks() {
+    //We know the "locks" toggle individually.  So now we check to see if
+    //toggling one lock affects the other two locks
+    char *routine = "TEST_combo_locks";
+    printf(testing, routine);
+    //Start at a known good state
+    caps_lock_off();
+    num_lock_off();
+    scroll_lock_off();
+
+    caps_lock_on();
+    assert(! is_num_lock());
+    assert(! is_scroll_lock());
+    caps_lock_off();
+    assert(! is_num_lock());
+    assert(! is_scroll_lock());
+
+    num_lock_on();
+    scroll_lock_on();
+
+    caps_lock_on();
+    assert(is_num_lock());
+    assert(is_scroll_lock());
+    caps_lock_off();
+    assert(is_num_lock());
+    assert(is_scroll_lock());
+
+    //Start at a known good state
+    caps_lock_off();
+    num_lock_off();
+    scroll_lock_off();
+
+    num_lock_on();
+    assert(! is_caps_lock());
+    assert(! is_scroll_lock());
+    num_lock_off();
+    assert(! is_caps_lock());
+    assert(! is_scroll_lock());
+
+    caps_lock_on();
+    scroll_lock_on();
+
+    num_lock_on();
+    assert(is_caps_lock());
+    assert(is_scroll_lock());
+    num_lock_off();
+    assert(is_caps_lock());
+    assert(is_scroll_lock());
+
+    //Start at a known good state
+    caps_lock_off();
+    num_lock_off();
+    scroll_lock_off();
+
+    scroll_lock_on();
+    assert(! is_caps_lock());
+    assert(! is_num_lock());
+    scroll_lock_off();
+    assert(! is_caps_lock());
+    assert(! is_num_lock());
+
+    caps_lock_on();
+    num_lock_on();
+
+    scroll_lock_on();
+    assert(is_caps_lock());
+    assert(is_num_lock());
+    scroll_lock_off();
+    assert(is_caps_lock());
+    assert(is_num_lock());
+
+    //Finish at a not too ridiculous state.
+    caps_lock_off();
+    num_lock_off();
+    scroll_lock_off();
+    printf(done, routine);
+}
+
 
 
 int main(int argc, char* argv[]) {
@@ -702,7 +834,24 @@ int main(int argc, char* argv[]) {
     put_clipboard("TEST_get_clipboard");
     sleep(1);
     TEST_get_clipboard();
+    sleep(1);
+
+    //Assuming the "lock" tests pass - then we'll want this later
+    unsigned int key_mask = _current_keyboard_state_mask();
+
+    caps_lock_off();   // At this point I don't know if these work (because I
+    num_lock_off();    // haven't tested them), but I want to start at a known
+    scroll_lock_off(); // state if at all possible.
+
+    TEST_caps_lock();
+    TEST_num_lock();
+    TEST_scroll_lock();
+    TEST_combo_locks();
+
+    //If we're here, then we can put the key lock state back how we found it
+    _alter_keyboard_state(key_mask);
+    assert(key_mask == _current_keyboard_state_mask());
 
     cleanup();
-	return 0;
+    return 0;
 }

@@ -25,6 +25,7 @@ $Rev$
 #endif
 
 #include <X11/extensions/XTest.h>
+#include <X11/XKBlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -40,6 +41,7 @@ $Rev$
 #include "xaut_keyboard.h"
 #include "xaut_mouse.h"
 #include "xaut_window.h"
+
 
 // --- Published subroutines, functions and structures
 

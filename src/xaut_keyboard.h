@@ -23,6 +23,25 @@ $Rev$
 #include "xaut.h"
 
 /**
+ * The following methods turn on or off the various lock keys.
+ *
+ * @return TRUE if the call succeeds
+ */
+BOOL caps_lock_on();
+BOOL caps_lock_off();
+BOOL num_lock_on();
+BOOL num_lock_off();
+BOOL scroll_lock_on();
+BOOL scroll_lock_off();
+
+/**
+ * The following methods return the current lock states.
+ */
+BOOL is_caps_lock();
+BOOL is_num_lock();
+BOOL is_scroll_lock();
+
+/**
  * How long the keyboard key stays down when "clicked" in milliseconds.
  * Default is 10 milliseconds, and usually works with most applications.
  * Note that 0 rarely works.  If you are trying to get a big speed boost
@@ -185,11 +204,32 @@ void print_keycodes();
 BOOL type(char *str);
 
 /**
+ * Changes the state of the three "lock" keys.
+ * The three lock keys being caps lock, num lock,
+ * and scroll lock.
+ *
+ * All three lock keys are changed at once based on the mask
+ * where (starting at LSB) bit[0] determines scroll lock,
+ * bit[1] determines caps lock, and bit[4] determines num lock.
+ * If the respective bits are set, then the locks are set.  If
+ * the respective bits are clear, then the locks are cleared.
+ */
+int _alter_keyboard_state(unsigned int mask);
+
+/**
+ * Creates a mask that can be passed to _alter_state which will NOT alter state.
+ * The idea is that one gets a mask that keeps the status quo,
+ * and then changes just the one thing that needs to be changed by
+ * toggling the one bit.
+ */
+unsigned int _current_keyboard_state_mask();
+
+/**
  * Extracts a meta key and count from a string.
  * Presumably the string is the inside of a set
  * of braces, and the keycode is on the left,
  * the count is on the right or not present.
- * E.g. (ignorning the braces) {Tab} returns
+ * E.g. (ignoring the braces) {Tab} returns
  * "Tab" and 1.  {Tab 3} returns "Tab" and 3.
  *
  * Note that it is the caller's responsibility

@@ -19,6 +19,119 @@ $Rev$
 
 #include "xaut_keyboard.h"
 
+/*
+ * These masks are used to interpret current keyboard state.
+ *
+ * Note: I found these values through extensive testing and so they may only
+ * work on my computer.  I can't find them documented anywhere.
+ */
+static unsigned long CAPS_LOCK_MASK = 1;
+static unsigned long NUM_LOCK_MASK = 2;
+static unsigned long SCROLL_LOCK_MASK = 0xFFFFE7FC;
+
+/*
+ * These masks are used to modify keyboard state
+ *
+ * Note: I found these values through extensive testing and so they may only
+ * work on my computer.  I can't find them documented anywhere.
+ */
+static unsigned int CAPS_LOCK = 2;
+static unsigned int NUM_LOCK = 16;
+static unsigned int SCROLL_LOCK = 1;
+
+BOOL caps_lock_on() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int neu = curr | CAPS_LOCK;
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL caps_lock_off() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int back_mask = ~ CAPS_LOCK;
+    unsigned int neu = curr & back_mask;
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL num_lock_on() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int neu = curr | (NUM_LOCK);
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL num_lock_off() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int back_mask = ~ NUM_LOCK;
+    unsigned int neu = curr & back_mask;
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL scroll_lock_on() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int neu = curr | (SCROLL_LOCK);
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL scroll_lock_off() {
+    if (!_check_init()) {
+        return 0;
+    }
+    unsigned int curr = _current_keyboard_state_mask();
+    unsigned int back_mask = ~ SCROLL_LOCK;
+    unsigned int neu = curr & back_mask;
+    return (_alter_keyboard_state(neu) ? TRUE : FALSE);
+}
+
+BOOL is_caps_lock() {
+    if (!_check_init()) {
+        return 0;
+    }
+    XKeyboardState state;
+    if(! XGetKeyboardControl(defaults->display, &state)) {
+        return 0;
+    }
+    unsigned long mask = state.led_mask;
+    return (mask & CAPS_LOCK_MASK ? TRUE : FALSE);
+}
+
+BOOL is_num_lock() {
+    if (!_check_init()) {
+        return 0;
+    }
+    XKeyboardState state;
+    if(! XGetKeyboardControl(defaults->display, &state)) {
+        return 0;
+    }
+    unsigned long mask = state.led_mask;
+    return (mask & NUM_LOCK_MASK ? TRUE : FALSE);
+}
+
+BOOL is_scroll_lock() {
+    if (!_check_init()) {
+        return 0;
+    }
+    XKeyboardState state;
+    if(! XGetKeyboardControl(defaults->display, &state)) {
+        return 0;
+    }
+    unsigned long mask = state.led_mask;
+    return (mask & SCROLL_LOCK_MASK ? TRUE : FALSE);
+}
+
 short key_down_delay(short delay) {
     if (!_check_init()) {
         return 0;
@@ -290,6 +403,48 @@ BOOL type( char *str ) {
     return FALSE;
 }
 #endif
+
+
+int _alter_keyboard_state(unsigned int mask) {
+    if (!_check_init()) {
+        return 0;
+    }
+    XKeyboardControl values;
+    values.led_mode = mask & SCROLL_LOCK ? LedModeOn : LedModeOff;
+    values.led = 3;
+    if(! XChangeKeyboardControl(defaults->display, KBLedMode, &values)) {
+        return 0;
+    }
+    if(! XkbLockModifiers(defaults->display,
+                XkbUseCoreKbd,
+                CAPS_LOCK | NUM_LOCK,
+                mask & (CAPS_LOCK | NUM_LOCK))) {
+        return 0;
+    }
+    return XFlush(defaults->display);
+}
+
+unsigned int _current_keyboard_state_mask() {
+    if (!_check_init()) {
+        return 0;
+    }
+    XKeyboardState state;
+    if(! XGetKeyboardControl(defaults->display, &state)) {
+        return 0;
+    }
+    unsigned long mask = state.led_mask;
+    unsigned int ret = 0;
+    if(mask & CAPS_LOCK_MASK) {
+        ret += CAPS_LOCK;
+    }
+    if(mask & NUM_LOCK_MASK) {
+        ret += NUM_LOCK;
+    }
+    if(mask & SCROLL_LOCK_MASK) {
+        ret += SCROLL_LOCK;
+    }
+    return ret;
+}
 
 xautpy_meta_t *_extract_metakey(char *input) {
     size_t i = 1;
