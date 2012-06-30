@@ -77,6 +77,15 @@ class clipboard:
         pass
 
 #Keyboard functions - Uses the following native calls:
+# extern short caps_lock_on();
+# extern short caps_lock_off();
+# extern short num_lock_on();
+# extern short num_lock_off();
+# extern short scroll_lock_on();
+# extern short scroll_lock_off();
+# extern short is_caps_lock();
+# extern short is_num_lock();
+# extern short is_scroll_lock();
 # extern void key_down_delay(unsigned short);
 # extern void key_click_delay(unsigned short);
 # extern unsigned short key_click(unsigned int);
@@ -86,6 +95,30 @@ class clipboard:
 # extern void interpret_meta_symbols(unsigned short);
 # extern void print_keycodes();
 class keyboard:
+    def capslock(self, tf = -1):
+        if tf == -1:
+            pass
+        elif tf == 0:
+            _xautpy.caps_lock_off()
+        else:
+            _xautpy.caps_lock_on()
+        return _xautpy.is_caps_lock()
+    def numlock(self, tf = -1):
+        if tf == -1:
+            pass
+        elif tf == 0:
+            _xautpy.num_lock_off()
+        else:
+            _xautpy.num_lock_on()
+        return _xautpy.is_num_lock()
+    def scroll_lock(self, tf = -1):
+        if tf == -1:
+            pass
+        elif tf == 0:
+            _xautpy.scroll_lock_off()
+        else:
+            _xautpy.scroll_lock_on()
+        return _xautpy.is_scroll_lock()
     def down_delay(self, delay = -1):
         num = int(delay)
         return _xautpy.key_down_delay(num)

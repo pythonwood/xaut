@@ -55,6 +55,15 @@ extern long desktop_count();
 extern long desktop(long);
 
 /** Found in xaut_keyboard.h  **/
+extern short caps_lock_on();
+extern short caps_lock_off();
+extern short num_lock_on();
+extern short num_lock_off();
+extern short scroll_lock_on();
+extern short scroll_lock_off();
+extern short is_caps_lock();
+extern short is_num_lock();
+extern short is_scroll_lock();
 extern short key_down_delay(short);
 extern short key_click_delay(short);
 extern unsigned short key_click(unsigned int);
@@ -121,6 +130,15 @@ extern long desktop_count();
 extern long desktop(long);
 
 /** Found in xaut_keyboard.h  **/
+extern short caps_lock_on();
+extern short caps_lock_off();
+extern short num_lock_on();
+extern short num_lock_off();
+extern short scroll_lock_on();
+extern short scroll_lock_off();
+extern short is_caps_lock();
+extern short is_num_lock();
+extern short is_scroll_lock();
 extern short key_down_delay(short);
 extern short key_click_delay(short);
 extern unsigned short key_click(unsigned int);

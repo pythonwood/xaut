@@ -63,8 +63,20 @@
         <td>Indicates whether to interpret meta symbols in type.</td>
     </tr>
     <tr>
-        <td class="bottom"><a href="#print_keycodes">print_keycodes()</a></td>
-        <td class="bottom">Prints X11 keycodes to the console.</td>
+        <td><a href="#print_keycodes">print_keycodes()</a></td>
+        <td>Prints X11 keycodes to the console.</td>
+    </tr>
+    <tr>
+        <td><a href="#capslock">capslock([tf])</a></td>
+        <td>Turns caps lock on or off and returns status.</td>
+    </tr>
+    <tr>
+        <td><a href="#numlock">numlock([tf])</a></td>
+        <td>Turns num lock on or off and returns status.</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#scroll_lock">scroll_lock([tf])</a></td>
+        <td class="bottom">Turns scroll lock on or off and returns status.</td>
     </tr>
     </table>
 </div>
@@ -146,7 +158,7 @@ print(delay) #Prints current delay</pre>
 <pre class="example_code">#Change the click delay to 10 ms
 import xaut
 kbd = xaut.keyboard()
-delay = kbd.down_delay(10)
+delay = kbd.click_delay(10)
 print(delay) #Prints "10"</pre>
 <pre class="example_code">#Find the current delay without making any changes
 import xaut
@@ -503,6 +515,277 @@ kbd.print_keycodes() #Prints out a listing of keycodes</pre>
         <a href="index.html">Index Page</a>
     </div>
 </div>
+<div class="command" id="capslock">
+    <div class="section desc">
+        <h3><a name="capslock">Function:</a></h3>
+        <p class="function">capslock([tf])</p>
+        <p class="description">
+            Can be used to turn caps lock on or off.  Returns the status
+            of caps lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear caps lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set caps lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if caps lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of caps lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of caps lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set caps lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set caps lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.capslock()
+if orig:
+    print("Start with caps lock on")
+else:
+    print("Start with caps lock off")
+state = kbd.capslock(1) # Caps lock on
+print(state)
+state = kbd.capslock(0) # Caps lock off
+print(state)
+state = kbd.capslock(orig)
+if state:
+    print("Finish with caps lock on")
+else:
+    print("Finish with caps lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your caps lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Caps_Lock}") # Caps lock is ON, but the light is OFF
+state = kbd.capslock()
+print(state) # State incorrectly has the value '0'
+state = kbd.capslock(1)
+print(state) # Caps lock is ON and the light is ON
+state = kbd.capslock(0)
+print(state) # Caps lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="numlock">
+    <div class="section desc">
+        <h3><a name="numlock">Function:</a></h3>
+        <p class="function">numlock([tf])</p>
+        <p class="description">
+            Can be used to turn num lock on or off.  Returns the status
+            of num lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear num lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set num lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if num lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of num lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of num lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set num lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set num lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.numlock()
+if orig:
+    print("Start with num lock on")
+else:
+    print("Start with num lock off")
+state = kbd.numlock(1) # Num lock on
+print(state)
+state = kbd.numlock(0) # Num lock off
+print(state)
+state = kbd.numlock(orig)
+if state:
+    print("Finish with num lock on")
+else:
+    print("Finish with num lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your num lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Num_Lock}") # num lock is ON, but the light is OFF
+state = kbd.numlock()
+print(state) # State incorrectly has the value '0'
+state = kbd.numlock(1)
+print(state) # Num lock is ON and the light is ON
+state = kbd.numlock(0)
+print(state) # Num lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="scroll_lock">
+    <div class="section desc">
+        <h3><a name="scroll_lock">Function:</a></h3>
+        <p class="function">scroll_lock([tf])</p>
+        <p class="description">
+            Can be used to turn scroll lock on or off.  Returns the status
+            of scroll lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+        <p class="description">
+            Note that scroll lock may or may not work with your programs, and is
+            here for completeness sake only.  I suggest you avoid using scroll lock
+            functionality unless you understand the consequences of having scroll
+            lock set on your computer.
+        </p>
+        <p class="description">
+            Note also that "scroll_lock" has an underbar in its name.  There are
+            two reasons for that: 1) Because it would invite errors to have a command
+            that contains "lll" - it's better to be ll_l, and 2) It further impresses the
+            point that scroll lock is an oddball command compared to the others
+            (caps lock and num lock).
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear scroll lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set scroll lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if scroll lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of scroll lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of scroll lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set scroll lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set scroll lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.scroll_lock()
+if orig:
+    print("Start with scroll lock on")
+else:
+    print("Start with scroll lock off")
+state = kbd.scroll_lock(1) # Scroll lock on
+print(state)
+state = kbd.scroll_lock(0) # Scroll lock off
+print(state)
+state = kbd.scroll_lock(orig)
+if state:
+    print("Finish with scroll lock on")
+else:
+    print("Finish with scroll lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your scroll lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Scroll_Lock}") # scroll lock is ON, but the light is OFF
+state = kbd.scroll_lock()
+print(state) # State incorrectly has the value '0'
+state = kbd.scroll_lock(1)
+print(state) # Scroll lock is ON and the light is ON
+state = kbd.scroll_lock(0)
+print(state) # Scroll lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
 
 </div><!-- /content -->
 <div id="footer">
@@ -510,7 +793,7 @@ Click the image to go to the download page.&nbsp;
 <a href="http://sourceforge.net/projects/xautomation">
     <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
     width="150" height="40"
-    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a>
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
 </div>
 </div><!-- /container -->
 

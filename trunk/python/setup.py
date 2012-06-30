@@ -6,7 +6,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='xaut',
-    version='0.3.2',
+    version='0.4.0',
     description='Python library to manipulate X11 windows',
     author='Chris Parker',
     author_email='chrsprkr3@gmail.com',
