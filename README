@@ -25,7 +25,10 @@ processed.
 === What you'll need to compile this ===
 Note that Ubuntu (along with some other distributions of Linux) do not come
 with a development environment installed.  You'll need to install a development
-environment if you do not already have one.
+environment if you do not already have one.  You'll also want to install the
+development library for Python which corresponds to your installed version of
+Python.  You can get that entering "python -V" (on my computer, it returns
+Python 2.6.6).
 
 Ubuntu (and similar):
  -- build-essential
@@ -47,14 +50,17 @@ Specifically if you are using Ubuntu and wish to compile this software, you can
 use the following command:
 
 $ sudo aptitude install build-essential swig x11proto-xext-dev libx11-dev \
-  libxtst-dev
+  libxtst-dev pythonN.N-dev
 
+(Where N.N matches the library version returned from "python -V")
 
 
 Or for Fedora use can use the following commands:
 
 $ sudo yum groupinstall \"Development Tools\"
-$ sudo yum install xorg-x11-proto-devel libX11-devel libXtst-devel
+$ sudo yum install xorg-x11-proto-devel libX11-devel libXtst-devel pythonN.N-dev
+
+(Where N.N matches the library version returned from "python -V")
 
 
 === If you want to modify the build ===
