@@ -33,6 +33,7 @@ $Rev$
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/XKBlib.h>
 #include <limits.h>
 
 #include "xaut_clipboard.h"

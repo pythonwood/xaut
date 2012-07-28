@@ -243,8 +243,8 @@ void print_keycodes() {
     char *strL, *strU; //Lower and upper strings
     char *fmt = "%4d %-33s %-6s\n";
     for (i = (min - 1); i <= max; i++) {
-        symL = XKeycodeToKeysym(defaults->display, i, FALSE);
-        symU = XKeycodeToKeysym(defaults->display, i, TRUE);
+        symL = XkbKeycodeToKeysym(defaults->display, i, 0, FALSE);
+        symU = XkbKeycodeToKeysym(defaults->display, i, 0, TRUE);
         if (symL) {
             strL = XKeysymToString(symL);
         }
@@ -483,11 +483,11 @@ xautpy_meta_t *_extract_metakey(char *input) {
 void _extract_metakey_shifted(xautpy_meta_t *meta) {
     //Try no shift key first, since if it doesn't matter
     // to the code, why worry about it
-    KeySym sym = XKeycodeToKeysym(defaults->display, meta->keycode, FALSE);
+    KeySym sym = XkbKeycodeToKeysym(defaults->display, meta->keycode, 0, FALSE);
     if (sym == meta->keysym) {
         meta->shifted = FALSE;
     } else {
-        sym = XKeycodeToKeysym(defaults->display, meta->keycode, TRUE);
+        sym = XkbKeycodeToKeysym(defaults->display, meta->keycode, 0, TRUE);
         if (sym == meta->keysym) {
             meta->shifted = TRUE;
         } else {

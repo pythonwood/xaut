@@ -244,7 +244,7 @@ char* _stringmid(const char *str, size_t first, size_t last) {
     size_t count = last - first + 1;
     char *ret = malloc((count + 1) * sizeof(char));
     if (ret == NULL) {
-        fprintf(stderr, "Unable to create string of %d characters\n",
+        fprintf(stderr, "Unable to create string of %zu characters\n",
                 (count + 1));
         return NULL;
     }
