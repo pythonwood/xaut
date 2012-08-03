@@ -560,7 +560,7 @@ win2.activate()</pre>
 import xaut
 import time
 disp = xaut.display()
-if(disp.desktop_count() < 2):
+if(disp.desktop_count() &lt; 2):
     print("Unable to demonstrate, only one desktop")
     exit
 
@@ -590,11 +590,11 @@ win.activate()</pre>
 <div class="command" id="maximize">
     <div class="section desc">
         <h3><a name="maximize">Function:</a></h3>
-        <p class="function">maximize()</p>
+        <p class="function">maximize([tf])</p>
         <p class="description">
         Maximizes the window both horizontally and vertically
         if the optional flag supplied is non-zero.  Restores from
-        maximization both horzontally and vertically if the
+        maximization both horizontally and vertically if the
         optional flag supplied is 0.
         </p>
     </div>
