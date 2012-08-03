@@ -282,7 +282,11 @@ class window:
     def activate(self):
         return _xautpy.activate_window(self.id)
     def find_outer_parent(self):
-        return _xautpy.find_outer_parent()
+        op_id = _xautpy.find_outer_parent(self.id)
+        if op_id > 0:
+            return window(op_id)
+        else:
+            return None
     def maximize(self, tf = 1):
         return _xautpy.maximize_window(self.id, tf)
     def maximize_horz(self, tf = 1):

@@ -373,7 +373,7 @@ void TEST_search_for_window() {
         printf("Aborting %s - conditions are invalid\n", routine);
         return;
     }
-    Window* found = search_for_window(name);
+    Window found = search_for_window(name);
     //Note that this fails when run in Eclipse...
     assert(found);
     free(name);
