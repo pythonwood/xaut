@@ -106,12 +106,26 @@ the following cool things:
 
 Thank you Max!!
 
+
 Thanks also to Beat Master Bob who found a bug in the mouse.move() code which
 manifests when the mouse is moved precisely 1 pixel in both the x and y
 directions simultaneously.  E.g. mouse.move(mouse.x() + 1, mouse.y() + 1).
 
 Thank you Beat Master Bob!!
 
+
+Thanks also to Chris Gagnon who had some problems in 64bit Ubuntu which lead
+me to find 3 problems:
+ 1) I was using XKeycodeToKeySym which was recently deprecated.  Too recently
+    for me to know about it in Debian Stable.
+ 2) I was printing a size_t incorrectly.  I was using %d when I should have
+    used %zu.
+ 3) Ubuntu puts their 64bit libraries someplace I wasn't looking.  I corrected
+    the build such that it looks in the proper, and reorganized it such that
+    it will be easier to modify if there are other 64bit locations about which
+    I know nothing (I use 32bit Debian Stable).
+
+Thanks Chris!!
 
 
 Want to see your name in bright lights (well, not that bright, but still)?
